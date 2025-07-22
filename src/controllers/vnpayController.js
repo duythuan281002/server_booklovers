@@ -101,24 +101,24 @@ const vnpayReturn = async (req, res) => {
 
     if (!orderCode) {
       return res.redirect(
-        "https://serverbooklovers-production.up.railway.app/thanh-toan-that-bai?error=missing-order-code"
+        "https://booklovers-demo.vercel.app/thanh-toan-that-bai?error=missing-order-code"
       );
     }
 
     if (responseCode === "00") {
       await orderService.updatePaymentSuccess(orderCode);
       return res.redirect(
-        "https://serverbooklovers-production.up.railway.app/thanh-toan-thanh-cong"
+        "https://booklovers-demo.vercel.app/thanh-toan-thanh-cong"
       );
     } else {
       await orderService.updatePaymentFailed(orderCode);
       return res.redirect(
-        "https://serverbooklovers-production.up.railway.app/thanh-toan-that-bai"
+        "https://booklovers-demo.vercel.app/thanh-toan-that-bai"
       );
     }
   } else {
     return res.redirect(
-      "https://serverbooklovers-production.up.railway.app/thanh-toan-that-bai?error=invalid-signature"
+      "https://booklovers-demo.vercel.app/thanh-toan-that-bai?error=invalid-signature"
     );
   }
 };
