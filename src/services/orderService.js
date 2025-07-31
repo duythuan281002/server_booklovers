@@ -26,8 +26,6 @@ const createOrder = async (userId, orderData) => {
   const orderCode = generateOrderCode();
 
   const now = new Date();
-  now.setHours(now.getHours() + 7);
-
   const orderDate = now.toISOString().slice(0, 19).replace("T", " ");
 
   const [orderResult] = await pool.query(
