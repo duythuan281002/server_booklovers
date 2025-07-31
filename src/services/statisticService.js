@@ -100,26 +100,30 @@ const calcPercentChange = (current, previous) => {
 export const getStatisticsHeader = async () => {
   const now = new Date();
 
-  const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const endOfThisMonth = new Date(
-    now.getFullYear(),
-    now.getMonth() + 1,
-    0,
-    23,
-    59,
-    59
+  // Hàm cộng thêm 7h cho một Date
+  function add7Hours(date) {
+    return new Date(date.getTime() + 7 * 60 * 60 * 1000);
+  }
+
+  const startOfThisMonth = add7Hours(
+    new Date(now.getFullYear(), now.getMonth(), 1)
+  );
+  const endOfThisMonth = add7Hours(
+    new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
   );
 
-  const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-  const endOfLastMonth = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    0,
-    23,
-    59,
-    59,
-    999
+  console.log("✅ Start of this month:", startOfThisMonth.toISOString());
+  console.log("✅ End of this month:", endOfThisMonth.toISOString());
+
+  const startOfLastMonth = add7Hours(
+    new Date(now.getFullYear(), now.getMonth() - 1, 1)
   );
+  const endOfLastMonth = add7Hours(
+    new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999)
+  );
+
+  console.log("✅ Start of last month:", startOfLastMonth.toISOString());
+  console.log("✅ End of last month:", endOfLastMonth.toISOString());
 
   const [[{ totalUsers }]] = await pool.query(
     `SELECT COUNT(*) AS totalUsers FROM users WHERE created_at BETWEEN ? AND ?`,
