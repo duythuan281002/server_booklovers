@@ -138,11 +138,12 @@ const getUserAddresses = async (userId) => {
 
 const createUser = async (userData) => {
   const { email, password, fullname, role, avatar } = userData;
+  const createdAt = new Date();
 
   const [result] = await pool.query(
-    `INSERT INTO users (email, password, fullname,role,avatar)
-     VALUES (?, ?, ?, ?, ?)`,
-    [email, password, fullname, role, avatar]
+    `INSERT INTO users (email, password, fullname, role, avatar, created_at)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [email, password, fullname, role, avatar, createdAt]
   );
 
   const insertedId = result.insertId;

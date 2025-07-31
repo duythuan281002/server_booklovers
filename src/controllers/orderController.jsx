@@ -1,4 +1,6 @@
 import orderService from "../services/orderService";
+import sendMail from "../helpers/send.mail";
+import userService from "../services/userService";
 
 const createOrder = async (req, res) => {
   try {
@@ -10,6 +12,19 @@ const createOrder = async (req, res) => {
       orderData
     );
 
+    const user = await userService.getUserById(userId);
+    const { email, fullname } = user;
+    await sendMail(
+      email,
+      "Đặt hàng thành công - BookLovers ❤️",
+      `
+        <h2>Xin chào ${fullname},</h2>
+        <p>Bạn đã đặt hàng thành công tại <strong>BookLovers</strong>.</p>
+        <p><strong>Mã đơn hàng:</strong> ${orderCode}</p>
+        <p>Chúng tôi sẽ xử lý đơn hàng của bạn trong thời gian sớm nhất.</p>
+        <p style="margin-top:20px;">-- BookLovers Team ❤️</p>
+      `
+    );
     res.status(201).json({
       message: "Đặt hàng thành công",
       orderId,
@@ -26,6 +41,22 @@ const getUserOrders = async (req, res) => {
     const userId = req.user.id;
     const orders = await orderService.getOrdersByUser(userId);
     res.status(200).json(orders);
+  } catch (error) {
+    console.error("Lỗi lấy đơn hàng:", error);
+    res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+};
+
+const getOrderById = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const order = await orderService.getOrderById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+    }
+
+    res.status(200).json(order);
   } catch (error) {
     console.error("Lỗi lấy đơn hàng:", error);
     res.status(500).json({ message: "Lỗi máy chủ" });
@@ -49,8 +80,61 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+const getAllOrders = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      paymentMethod = "",
+      status = "",
+      priceFilter = "",
+      fromDate = "",
+      toDate = "",
+    } = req.query;
+
+    const data = await orderService.getAllOrders({
+      page: parseInt(page),
+      limit: parseInt(limit),
+      search,
+      paymentMethod,
+      status,
+      priceFilter,
+      fromDate,
+      toDate,
+    });
+
+    return res.status(200).json({
+      errCode: 0,
+      message: "Success",
+      ...data,
+    });
+  } catch (error) {
+    console.error("Error fetching all orders:", error);
+    return res.status(500).json({
+      errCode: 1,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const updateOrderStatus = async (req, res) => {
+  const { orderId } = req.params;
+  const { status } = req.body;
+
+  try {
+    await orderService.updateOrderStatus(orderId, status);
+    res.status(200).json({ message: "Cập nhật trạng thái thành công" });
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Lỗi máy chủ" });
+  }
+};
+
 export default {
   createOrder,
   getUserOrders,
   cancelOrder,
+  getOrderById,
+  getAllOrders,
+  updateOrderStatus,
 };

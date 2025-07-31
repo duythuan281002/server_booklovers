@@ -12,7 +12,7 @@ import promotionController from "../controllers/promotionController";
 import orderController from "../controllers/orderController";
 import categoryController from "../controllers/categoryController";
 import vnpayController from "../controllers/vnpayController";
-import passport from "passport";
+import statisticController from "../controllers/statisticController";
 
 const router = express.Router();
 
@@ -128,6 +128,7 @@ const initWebRoutes = (app) => {
     authMiddleware,
     orderController.getUserOrders
   );
+  router.get("/api/orders/:id", orderController.getOrderById);
   router.put(
     "/api/orders/:orderId/cancel",
     authMiddleware,
@@ -137,6 +138,38 @@ const initWebRoutes = (app) => {
   router.post("/api/vnpay/create_payment_url", vnpayController.createPayment);
   router.get("/api/vnpay/vnpay_return", vnpayController.vnpayReturn);
 
+  router.get(
+    "/api/profileAdmin",
+    authMiddleware,
+    userController.getProfileAdmin
+  );
+  router.get("/api/admin/statistics", statisticController.getStatistics);
+  router.get(
+    "/api/admin/statisticsheader",
+    statisticController.getStatisticsHeader
+  );
+  router.get(
+    "/api/admin/statistics/monthly-revenue",
+    statisticController.getMonthlyRevenue
+  );
+  router.get(
+    "/api/admin/statistics/top-orders",
+    statisticController.getTopOrders
+  );
+  router.get(
+    "/api/admin/statistics/top-buyers",
+    statisticController.getTopBuyersByMonthYear
+  );
+  router.get(
+    "/api/admin/statistics/month-status",
+    statisticController.getOrderStatusByMonth
+  );
+
+  router.get("/api/admin/orders/all", orderController.getAllOrders);
+  router.put(
+    "/api/admin/orders/update-status/:orderId",
+    orderController.updateOrderStatus
+  );
   app.use("/", router);
 };
 

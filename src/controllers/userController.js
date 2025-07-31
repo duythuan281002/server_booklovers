@@ -218,12 +218,15 @@ const loginAdmin = async (req, res) => {
 
     const { password: _, ...userInfo } = user;
 
-    setTimeout(() => {
-      res.status(200).json({
-        message: "Đăng nhập thành công!",
-        user: userInfo,
-      });
-    }, 2000);
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+    res.status(200).json({
+      message: "Đăng nhập thành công!",
+      token,
+    });
   } catch (error) {
     res.status(500).json({ message: "Lỗi server khi đăng nhập." });
   }
@@ -319,6 +322,18 @@ const updatePassword = async (req, res) => {
   }
 };
 
+export const getProfileAdmin = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await userService.getUserById(userId);
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error("Lỗi lấy thông tin admin:", error);
+    return res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
 export default {
   getAllUsers,
   getUserById,
@@ -333,4 +348,5 @@ export default {
   setDefaultAddress,
   deleteAddress,
   updatePassword,
+  getProfileAdmin,
 };

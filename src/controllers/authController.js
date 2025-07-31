@@ -17,7 +17,6 @@ const twilio = require("twilio")(
 const sendResetOTP = async (req, res) => {
   try {
     const { email } = req.body;
-    console.log("req.body:", req.body);
     const user = await userService.getUserByEmail(email);
 
     if (!user) {
