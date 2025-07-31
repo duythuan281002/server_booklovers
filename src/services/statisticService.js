@@ -100,28 +100,53 @@ const calcPercentChange = (current, previous) => {
 export const getStatisticsHeader = async () => {
   const now = new Date();
 
-  // Hàm cộng thêm 7h cho một Date
-  function add7Hours(date) {
-    return new Date(date.getTime() + 7 * 60 * 60 * 1000);
+  function getVNDateUTC(
+    year,
+    month,
+    day,
+    hour = 0,
+    minute = 0,
+    second = 0,
+    ms = 0
+  ) {
+    return new Date(Date.UTC(year, month, day, hour - 7, minute, second, ms));
   }
 
-  const startOfThisMonth = add7Hours(
-    new Date(now.getFullYear(), now.getMonth(), 1)
+  function addDays(date, days) {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+
+  const startOfThisMonth = addDays(
+    getVNDateUTC(now.getFullYear(), now.getMonth(), 1),
+    1
   );
-  const endOfThisMonth = add7Hours(
-    new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
+  const endOfThisMonth = getVNDateUTC(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    0,
+    23,
+    59,
+    59
+  );
+
+  const startOfLastMonth = addDays(
+    getVNDateUTC(now.getFullYear(), now.getMonth() - 1, 1),
+    1
+  );
+  const endOfLastMonth = getVNDateUTC(
+    now.getFullYear(),
+    now.getMonth(),
+    0,
+    23,
+    59,
+    59,
+    999
   );
 
   console.log("✅ Start of this month:", startOfThisMonth.toISOString());
   console.log("✅ End of this month:", endOfThisMonth.toISOString());
-
-  const startOfLastMonth = add7Hours(
-    new Date(now.getFullYear(), now.getMonth() - 1, 1)
-  );
-  const endOfLastMonth = add7Hours(
-    new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999)
-  );
-
   console.log("✅ Start of last month:", startOfLastMonth.toISOString());
   console.log("✅ End of last month:", endOfLastMonth.toISOString());
 
