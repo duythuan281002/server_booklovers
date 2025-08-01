@@ -100,7 +100,7 @@ const calcPercentChange = (current, previous) => {
 export const getStatisticsHeader = async () => {
   const now = new Date();
 
-  function getVNDateUTC(
+  function getUTCDate(
     year,
     month,
     day,
@@ -109,41 +109,32 @@ export const getStatisticsHeader = async () => {
     second = 0,
     ms = 0
   ) {
-    return new Date(Date.UTC(year, month, day, hour - 7, minute, second, ms));
+    return new Date(Date.UTC(year, month, day, hour, minute, second, ms));
   }
 
-  function addDays(date, days) {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-  }
+  // function addDays(date, days) {
+  //   const result = new Date(date);
+  //   result.setUTCDate(result.getUTCDate() + days);
+  //   return result;
+  // }
 
-  const startOfThisMonth = addDays(
-    getVNDateUTC(now.getFullYear(), now.getMonth(), 1),
+  const startOfThisMonth = getUTCDate(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
     1
   );
-  const endOfThisMonth = getVNDateUTC(
-    now.getFullYear(),
-    now.getMonth() + 1,
-    0,
-    23,
-    59,
-    59
-  );
-
-  const startOfLastMonth = addDays(
-    getVNDateUTC(now.getFullYear(), now.getMonth() - 1, 1),
+  const endOfThisMonth = getUTCDate(
+    now.getUTCFullYear(),
+    now.getUTCMonth() + 1,
     1
   );
-  const endOfLastMonth = getVNDateUTC(
-    now.getFullYear(),
-    now.getMonth(),
-    0,
-    23,
-    59,
-    59,
-    999
+
+  const startOfLastMonth = getUTCDate(
+    now.getUTCFullYear(),
+    now.getUTCMonth() - 1,
+    1
   );
+  const endOfLastMonth = getUTCDate(now.getUTCFullYear(), now.getUTCMonth(), 1);
 
   const [[{ totalUsers }]] = await pool.query(
     `SELECT COUNT(*) AS totalUsers FROM users WHERE created_at >= ? AND created_at <= ?`,
