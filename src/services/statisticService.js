@@ -146,17 +146,17 @@ export const getStatisticsHeader = async () => {
   );
 
   const [[{ totalUsers }]] = await pool.query(
-    `SELECT COUNT(*) AS totalUsers FROM users WHERE created_at BETWEEN ? AND ?`,
+    `SELECT COUNT(*) AS totalUsers FROM users WHERE created_at >= ? AND created_at <= ?`,
     [startOfThisMonth, endOfThisMonth]
   );
 
   const [[{ totalOrders }]] = await pool.query(
-    `SELECT COUNT(*) AS totalOrders FROM orders WHERE status = 'delivered' AND order_date BETWEEN ? AND ?`,
+    `SELECT COUNT(*) AS totalOrders FROM orders WHERE status = 'delivered' AND order_date >= ? AND order_date <= ?`,
     [startOfThisMonth, endOfThisMonth]
   );
 
   const [[{ revenue }]] = await pool.query(
-    `SELECT SUM(total_price) AS revenue FROM orders WHERE status = 'delivered' AND order_date BETWEEN ? AND ?`,
+    `SELECT SUM(total_price) AS revenue FROM orders WHERE status = 'delivered' AND order_date >= ? AND order_date <= ?`,
     [startOfThisMonth, endOfThisMonth]
   );
 
@@ -165,17 +165,17 @@ export const getStatisticsHeader = async () => {
   );
 
   const [[{ totalUsersLast }]] = await pool.query(
-    `SELECT COUNT(*) AS totalUsersLast FROM users WHERE created_at BETWEEN ? AND ?`,
+    `SELECT COUNT(*) AS totalUsersLast FROM users WHERE created_at >= ? AND created_at <= ?`,
     [startOfLastMonth, endOfLastMonth]
   );
 
   const [[{ totalOrdersLast }]] = await pool.query(
-    `SELECT COUNT(*) AS totalOrdersLast  FROM orders WHERE status = 'delivered' AND order_date BETWEEN ? AND ?`,
+    `SELECT COUNT(*) AS totalOrdersLast FROM orders WHERE status = 'delivered' AND order_date >= ? AND order_date <= ?`,
     [startOfLastMonth, endOfLastMonth]
   );
 
   const [[{ revenueLast }]] = await pool.query(
-    `SELECT SUM(total_price) AS revenueLast FROM orders WHERE status = 'delivered' AND order_date BETWEEN ? AND ?`,
+    `SELECT SUM(total_price) AS revenueLast FROM orders WHERE status = 'delivered' AND order_date >= ? AND order_date <= ?`,
     [startOfLastMonth, endOfLastMonth]
   );
 
