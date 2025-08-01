@@ -179,6 +179,19 @@ export const getStatisticsHeader = async () => {
     [startOfLastMonth, endOfLastMonth]
   );
 
+  console.log("startOfThisMonth:", startOfThisMonth.toISOString());
+  console.log("endOfThisMonth:", endOfThisMonth.toISOString());
+  console.log("startOfLastMonth:", startOfLastMonth.toISOString());
+  console.log("endOfLastMonth:", endOfLastMonth.toISOString());
+
+  console.log("Total Users This Month:", totalUsers);
+  console.log("Total Users Last Month:", totalUsersLast);
+  console.log("Total Orders This Month:", totalOrders);
+  console.log("Total Orders Last Month:", totalOrdersLast);
+  console.log("Revenue This Month:", revenue);
+  console.log("Revenue Last Month:", revenueLast);
+  console.log("Total Products:", totalProducts);
+
   return {
     totalUsers,
     totalUsersChange: calcPercentChange(totalUsers, totalUsersLast),
