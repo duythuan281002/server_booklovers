@@ -112,12 +112,6 @@ export const getStatisticsHeader = async () => {
     return new Date(Date.UTC(year, month, day, hour, minute, second, ms));
   }
 
-  // function addDays(date, days) {
-  //   const result = new Date(date);
-  //   result.setUTCDate(result.getUTCDate() + days);
-  //   return result;
-  // }
-
   const startOfThisMonth = getUTCDate(
     now.getUTCFullYear(),
     now.getUTCMonth(),
@@ -169,19 +163,6 @@ export const getStatisticsHeader = async () => {
     `SELECT SUM(total_price) AS revenueLast FROM orders WHERE status = 'delivered' AND order_date >= ? AND order_date <= ?`,
     [startOfLastMonth, endOfLastMonth]
   );
-
-  console.log("startOfThisMonth:", startOfThisMonth.toISOString());
-  console.log("endOfThisMonth:", endOfThisMonth.toISOString());
-  console.log("startOfLastMonth:", startOfLastMonth.toISOString());
-  console.log("endOfLastMonth:", endOfLastMonth.toISOString());
-
-  console.log("Total Users This Month:", totalUsers);
-  console.log("Total Users Last Month:", totalUsersLast);
-  console.log("Total Orders This Month:", totalOrders);
-  console.log("Total Orders Last Month:", totalOrdersLast);
-  console.log("Revenue This Month:", revenue);
-  console.log("Revenue Last Month:", revenueLast);
-  console.log("Total Products:", totalProducts);
 
   return {
     totalUsers,
