@@ -98,6 +98,53 @@ const calcPercentChange = (current, previous) => {
 };
 
 export const getStatisticsHeader = async () => {
+  // const now = new Date();
+
+  // function getVNDateUTC(
+  //   year,
+  //   month,
+  //   day,
+  //   hour = 0,
+  //   minute = 0,
+  //   second = 0,
+  //   ms = 0
+  // ) {
+  //   return new Date(Date.UTC(year, month, day, hour - 7, minute, second, ms));
+  // }
+
+  // function addDays(date, days) {
+  //   const result = new Date(date);
+  //   result.setDate(result.getDate() + days);
+  //   return result;
+  // }
+
+  // const startOfThisMonth = addDays(
+  //   getVNDateUTC(now.getFullYear(), now.getMonth(), 1),
+  //   1
+  // );
+  // const endOfThisMonth = getVNDateUTC(
+  //   now.getFullYear(),
+  //   now.getMonth() + 1,
+  //   0,
+  //   23,
+  //   59,
+  //   59
+  // );
+
+  // const startOfLastMonth = addDays(
+  //   getVNDateUTC(now.getFullYear(), now.getMonth() - 1, 1),
+  //   1
+  // );
+  // const endOfLastMonth = getVNDateUTC(
+  //   now.getFullYear(),
+  //   now.getMonth(),
+  //   0,
+  //   23,
+  //   59,
+  //   59,
+  //   999
+  // );
+
   const now = new Date();
 
   function getVNDateUTC(
@@ -119,12 +166,13 @@ export const getStatisticsHeader = async () => {
   }
 
   const startOfThisMonth = addDays(
-    getVNDateUTC(now.getFullYear(), now.getMonth(), 1),
+    getVNDateUTC(now.getFullYear(), now.getMonth() + 1, 1),
     1
   );
+
   const endOfThisMonth = getVNDateUTC(
     now.getFullYear(),
-    now.getMonth() + 1,
+    now.getMonth() + 2,
     0,
     23,
     59,
@@ -132,18 +180,24 @@ export const getStatisticsHeader = async () => {
   );
 
   const startOfLastMonth = addDays(
-    getVNDateUTC(now.getFullYear(), now.getMonth() - 1, 1),
+    getVNDateUTC(now.getFullYear(), now.getMonth(), 1),
     1
   );
+
   const endOfLastMonth = getVNDateUTC(
     now.getFullYear(),
-    now.getMonth(),
+    now.getMonth() + 1,
     0,
     23,
     59,
     59,
     999
   );
+
+  console.log("✅ Start of this month:", startOfThisMonth.toISOString());
+  console.log("✅ End of this month:", endOfThisMonth.toISOString());
+  console.log("✅ Start of last month:", startOfLastMonth.toISOString());
+  console.log("✅ End of last month:", endOfLastMonth.toISOString());
 
   const [[{ totalUsers }]] = await pool.query(
     `SELECT COUNT(*) AS totalUsers FROM users WHERE created_at BETWEEN ? AND ?`,
